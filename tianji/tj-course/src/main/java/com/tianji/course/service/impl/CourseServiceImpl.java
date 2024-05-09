@@ -162,6 +162,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         rabbitMqHelper.send(MqConstants.Exchange.COURSE_EXCHANGE, MqConstants.Key.COURSE_DELETE_KEY, id);
     }
 
+    /**
+     * 根据 三级分类id列表 、或 课程id列表（可选其一或都选），批量查询 course表
+     * @param courseSimpleInfoListDTO 课程三级分类列表
+     * @return
+     */
     @Override
     public List<CourseSimpleInfoDTO> getSimpleInfoList(CourseSimpleInfoListDTO courseSimpleInfoListDTO) {
         //1.课程查询条件

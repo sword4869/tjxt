@@ -85,6 +85,13 @@ public class LearningLessonServiceImpl extends ServiceImpl<LearningLessonMapper,
         saveBatch(list);
     }
 
+    /**
+     * 根据当前用户id，去learning_lesson表中查询，LearningLessonVO的剩下3个字段去 course 表中查询
+     *
+     * - 去 course 表中查询：用到feign
+     * @param query
+     * @return
+     */
     @Override
     public PageDTO<LearningLessonVO> queryMyLessons(PageQuery query) {
         // 1.获取当前登录用户
@@ -98,7 +105,7 @@ public class LearningLessonServiceImpl extends ServiceImpl<LearningLessonMapper,
         if (CollUtils.isEmpty(records)) {
             return PageDTO.empty(page);
         }
-        // 3.查询课程信息
+        // 3. 查询课程信息：批量查询
         Map<Long, CourseSimpleInfoDTO> cMap = queryCourseSimpleInfoList(records);
 
         // 4.封装VO返回
@@ -117,6 +124,11 @@ public class LearningLessonServiceImpl extends ServiceImpl<LearningLessonMapper,
         return PageDTO.of(page, list);
     }
 
+    /**
+     * 批量查询，根据 LearningLesson 中的 courseId，去course表中查询。
+     * @param records
+     * @return
+     */
     private Map<Long, CourseSimpleInfoDTO> queryCourseSimpleInfoList(List<LearningLesson> records) {
         // 3.1.获取课程id
         Set<Long> cIds = records.stream().map(LearningLesson::getCourseId).collect(Collectors.toSet());
